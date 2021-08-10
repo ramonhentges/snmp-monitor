@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+    app:
+        build: .
+        entrypoint: .docker/entrypoint.sh
+        container_name: snmp-backend
+        ports:
+            - 3010:3010
+        volumes:
+            - .:/home/node/app
+
+    db:
+        build: .docker/postgres
+        container_name: db-snmp
+        tty: true
+        volumes:
+            - .docker/dbdata:/var/lib/postgresql/data
+        environment:
+            POSTGRES_PASSWORD: root
+            POSTGRES_DB: snmp
+
+    pgadmin:
+        image: dpage/pgadmin4:5.5
+        container_name: pgadmin4
+        environment:
+            PGADMIN_DEFAULT_EMAIL: admin@admin.com
+            PGADMIN_DEFAULT_PASSWORD: root
+        ports:
+            - "5050:80"
